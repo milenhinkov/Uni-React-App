@@ -30,10 +30,10 @@ class App extends Component {
             <RaisedButton label="Login" secondary={true} />
             <RaisedButton label="Logout" secondary={true} />
             <Switch>
-            <Route path="/register" component={Register} />
-            <Route path="/login" component={Login} />
-            <Route path="/tasks" component={TableExampleControlled}/>
-                </Switch>
+              <Route path="/register" component={Register} />
+              <Route path="/login" component={Login} />
+              <Route path="/tasks" component={TableExampleControlled} />
+            </Switch>
             {/* <div className="App">
                <Register /> 
             </div> */}
