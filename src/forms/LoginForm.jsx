@@ -15,7 +15,6 @@ class Login extends Component {
 
     submitRegister(event) {
         let user = localStorage.getItem(this.state.username, JSON.stringify(this.state));
-        console.log(user);
     }
 
 

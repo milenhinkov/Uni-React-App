@@ -11,30 +11,25 @@ export default class TableInfoRow extends Component {
         this.state = props;
 
         this.DrowButton = this.DrowButton.bind(this);
-        this.DrowRows = this.DrowRows.bind(this);
+        this.DrowRow = this.DrowRow.bind(this);
     }
 
-    DrowButton() {
+    DrowButton(func) {
         if (this.props.isEditable) {
-            return <TableRowColumn><RaisedButton label="Edit" primary={true}/*  onClick={(ev) => { console.log(Object.keys(this.state.info.tasks) + " : " + Object.values(this.state.info.tasks)) }} */ /></TableRowColumn>
+            return <TableRowColumn><RaisedButton label="Edit" primary={true}  onClick={func} /></TableRowColumn>
         }
         return null;
     }
 
-    DrowRows(){
-        return Object.values(this.state.info.tasks).map((task, i) => {
-            return(
-                <TableRow key={i} >
-                <TableRowColumn>{this.state.info.userName}</TableRowColumn>
-                <TableRowColumn>{task.TaskTitle}</TableRowColumn>
-                <TableRowColumn>{task.TaskDescription}</TableRowColumn>
-                <TableRowColumn>{task.TaskPriority}</TableRowColumn>
-                {this.DrowButton()}
-            </TableRow>)
-        })
+    DrowRow(collection){
+        return Object.keys(collection).map(prop => { return <TableRowColumn key={prop} >{collection[prop]}</TableRowColumn> })
     }
 
     render() {
-        return (this.DrowRows());
+        return (
+            <TableRow>
+                {this.DrowRow(this.state.info)}
+                {this.DrowButton(this.state.onClick)}
+            </TableRow>)
     }
 }

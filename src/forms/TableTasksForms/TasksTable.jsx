@@ -14,48 +14,56 @@ export default class TableExampleControlled extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      rowsData: {
-        firstUser: {
+      users: [
+        {
           userName: "Steve",
           password: "SecurePass",
-          tasks: [{
-            TaskTitle: "Important task",
-            TaskDescription: "The Task Is Really Important",
-            TaskPriority: "High"
-          }, {
-            TaskTitle: "Second Important task",
-            TaskDescription: "The Task Is Really Important",
-            TaskPriority: "High"
-          }
-          ]
-        }, secondUser: {
+        },
+        {
           userName: "Bob",
           password: "NotSecurePass",
-          tasks: [{
-            TaskTitle: "Unimportant task",
-            TaskDescription: "The Task Is not really Important",
-            TaskPriority: "Low"
-          }]
-        }
+        }],
+      tasks: [{
+        Owner: "Bob",
+        TaskTitle: "Important task",
+        TaskDescription: "The Task Is Really Important",
+        TaskPriority: "High"
+      }, {
+        Owner: "Bob",
+        TaskTitle: "Second Important task",
+        TaskDescription: "The Task Is Really Important",
+        TaskPriority: "High"
       },
+      {
+        Owner: "Steve",
+        TaskTitle: "Unimportant task",
+        TaskDescription: "The Task Is not really Important",
+        TaskPriority: "Low"
+      }],
       currentUser: {
         userName: "Steve",
         password: "SecurePass",
-        tasks: {
-          TaskTitle: "Important task",
-          TaskDescription: "The Task Is Really Important",
-          TaskPriority: "High"
-        }
-      }, openEditForm: true,
+      },
+      openEditForm: true,
+      tableHeaders: ["TaskOwner", "TaskTitle", "TaskDescription", "TaskPriority", "Editable"]
     };
-    this.decideShouldBeEditable = this.decideShouldBeEditable.bind(this);
+    this.drowRows = this.drowRows.bind(this);
+    this.drowHeaders = this.drowHeaders.bind(this);
   }
-  decideShouldBeEditable() {
-    return Object.values(this.state.rowsData)
-      .map((row, i) => {
-        return (
-          <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.userName === row.userName} />)
-      })
+
+  test(){
+    alert('success');
+  }
+
+  drowRows(collection) {
+    return collection.map((row, i) => {
+      return (
+        <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.userName === row.Owner} onClick={this.test}/>)
+    })
+  }
+
+  drowHeaders(headers){
+    return headers.map((head) => {return <TableHeaderColumn key={head}>{head}</TableHeaderColumn>})
   }
 
   render() {
@@ -64,15 +72,11 @@ export default class TableExampleControlled extends Component {
         <Table selectable={false}>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
-              <TableHeaderColumn>TaskOwner</TableHeaderColumn>
-              <TableHeaderColumn>TaskTitle</TableHeaderColumn>
-              <TableHeaderColumn>TaskDescription</TableHeaderColumn>
-              <TableHeaderColumn>TaskPriority</TableHeaderColumn>
-              <TableHeaderColumn>Editable</TableHeaderColumn>
+              {this.drowHeaders(this.state.tableHeaders)}
             </TableRow>
           </TableHeader >
           <TableBody displayRowCheckbox={false}>
-            {this.decideShouldBeEditable()}
+            {this.drowRows(this.state.tasks)}
           </TableBody>
         </Table>
         <TaskEditForm open={this.state.openEditForm} />
