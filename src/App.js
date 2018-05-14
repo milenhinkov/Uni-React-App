@@ -1,4 +1,4 @@
-import React, { Component, createContext } from 'react';
+import React, { Component } from 'react';
 import './App.css';
 
 // --- custom components-------------
@@ -15,14 +15,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 // --- router componnets-------------
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-const Context = createContext();
-const { Provider } = Context;
-
 class App extends Component {
-
   render() {
     return (
-      <Provider value={{ firstName: 'Didier', lastName: 'Franc' }}>
+     
         <MuiThemeProvider>
           <div>
             <AppBar>
@@ -38,12 +34,8 @@ class App extends Component {
               <Route path="/tasks" component={TableExampleControlled} />
               <Route path="/users" component={UsersTable} />
             </Switch>
-            {/* <div className="App">
-               <Register /> 
-            </div> */}
           </div>
         </MuiThemeProvider>
-      </Provider>
     );
   }
 }

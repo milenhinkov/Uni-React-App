@@ -7,7 +7,6 @@ import {
   TableRow
 } from 'material-ui/Table';
 import TableInfoRow from '../TableTasksForms/TableInfoRow'
-/*import TaskEditForm from './TaskEditForm' */
 
 
 export default class UsersTable extends Component {
@@ -26,21 +25,21 @@ export default class UsersTable extends Component {
           role: "user",
         }],
       tasks: [{
-        Owner: "Bob",
-        TaskTitle: "Important task",
-        TaskDescription: "The Task Is Really Important",
-        TaskPriority: "High"
+        owner: "Bob",
+        taskTitle: "Important task",
+        taskDescription: "The Task Is Really Important",
+        taskPriority: "High"
       }, {
-        Owner: "Bob",
-        TaskTitle: "Second Important task",
-        TaskDescription: "The Task Is Really Important",
-        TaskPriority: "High"
+        owner: "Bob",
+        taskTitle: "Second Important task",
+        taskDescription: "The Task Is Really Important",
+        taskPriority: "High"
       },
       {
-        Owner: "Steve",
-        TaskTitle: "Unimportant task",
-        TaskDescription: "The Task Is not really Important",
-        TaskPriority: "Low"
+        owner: "Steve",
+        taskTitle: "Unimportant task",
+        taskDescription: "The Task Is not really Important",
+        taskPriority: "Low"
       }],
       currentUser: {
         userName: "Steve",
@@ -50,19 +49,19 @@ export default class UsersTable extends Component {
       tableHeaders: ["UserName", "Password", "Role"]
     }
     this.drowHeaders = this.drowHeaders.bind(this);
-
+    this.drowRows = this.drowRows.bind(this); 
   }
 
   drowHeaders(headers) {
     return headers.map((head) => { return <TableHeaderColumn key={head}>{head}</TableHeaderColumn> })
   }
 
-  drowRows(collection) {
+   drowRows(collection) {
     return collection.map((row, i) => {
       return (
         <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.userName === row.Owner} />)
     })
-  }
+  } 
 
   render() {
     return (
@@ -74,7 +73,7 @@ export default class UsersTable extends Component {
             </TableRow>
           </TableHeader >
           <TableBody displayRowCheckbox={false}>
-            {this.drowRows(this.state.users)}
+            { this.drowRows(this.state.users) }
           </TableBody>
         </Table>
         {/*  <TaskEditForm open={this.state.openEditForm} /> */}

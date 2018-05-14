@@ -14,9 +14,9 @@ export default class TableInfoRow extends Component {
         this.DrowRow = this.DrowRow.bind(this);
     }
 
-    DrowButton(func) {
+    DrowButton() {
         if (this.props.isEditable) {
-            return <TableRowColumn><RaisedButton label="Edit" primary={true}  onClick={func} /></TableRowColumn>
+            return <TableRowColumn><RaisedButton label="Edit" primary={true}  /></TableRowColumn>
         }
         return null;
     }
@@ -29,7 +29,7 @@ export default class TableInfoRow extends Component {
         return (
             <TableRow>
                 {this.DrowRow(this.state.info)}
-                {this.DrowButton(this.state.onClick)}
+                {this.DrowButton()}
             </TableRow>)
     }
 }
