@@ -59,7 +59,7 @@ export default class UsersTable extends Component {
    drowRows(collection) {
     return collection.map((row, i) => {
       return (
-        <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.userName === row.Owner} />)
+        <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.userName === row.Owner || this.state.currentUser.role === "admin"} />)
     })
   } 
 
