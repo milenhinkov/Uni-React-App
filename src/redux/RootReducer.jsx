@@ -1,11 +1,8 @@
 import { combineReducers } from 'redux'
-import addTask from './Reducers'
+import courses from './Reducers'
 
 const rootReducer = combineReducers({
-    addTask
+    courses
 });
-
-
-
 
 export default rootReducer;

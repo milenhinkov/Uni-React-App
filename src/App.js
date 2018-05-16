@@ -6,6 +6,7 @@ import Register from './forms/RegisterForm'
 import Login from './forms/LoginForm'
 import TasksTable from './forms/TableTasksForms/TasksTable'
 import UsersTable from './forms/TableUsersForm/UsersTable'
+import HomePage from './forms/PrimeComponents/HomeComponent'
 
 // --- fansy components--------------
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -42,6 +43,7 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <Route path="/tasks" component={() =>{return <TasksTable info={testProps}/>}} />
             <Route path="/users" component={UsersTable} />
+            <Route path="/home" component={HomePage} />
           </Switch>
         </div>
       </MuiThemeProvider>

@@ -1,7 +1,8 @@
-export default function addTaskToUser(state) {
-  debugger;
+import * as actionTypes from './ActionTypes'
+
+export default function createCourse(course) {
   return {
-    type: 'ADD_TASK',
-    state
+    type: actionTypes.CREATE_COURSE,
+    course
   }
 }

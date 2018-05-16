@@ -1,10 +1,9 @@
-export default function addTaskToUser(state = { user: { userName: "" }, task: { owner: "" } }, action){
-  debugger;
+import * as actionTypes from './ActionTypes'
+
+export default function courseReducer(state = [], action){
   switch (action.type) {
-    case 'ADD_TASK':
-      let newState = JSON.parse(JSON.stringify(state));
-      newState.task.owner = state.user.userName;
-      return newState;
+    case actionTypes.CREATE_COURSE:
+      return [...state, Object.assign({}, action.course)];
     default:
       return state;
   }
