@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import createCourse from '../../redux/ActionCreators'
+import { createCourse } from '../../redux/ActionCreators'
 import PropTypes from 'prop-types';
 
 class HomePage extends Component {
