@@ -1,49 +1,75 @@
 import React, { Component } from 'react';
-import './App.css';
 
 // --- custom components-------------
 import Register from './forms/RegisterForm'
 import Login from './forms/LoginForm'
 import TasksTable from './forms/TableTasksForms/TasksTable'
 import UsersTable from './forms/TableUsersForm/UsersTable'
-import HomePage from './forms/PrimeComponents/HomeComponent'
+import TaskEditForm from './forms/TableTasksForms/TaskEditForm'
 
 // --- fansy components--------------
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
-import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+
 
 // --- router componnets-------------
 import { Route, Switch, withRouter } from 'react-router-dom';
 
+//---- redux components ------------- 
+import { connect } from 'react-redux'
+
+//---- external css -----------------
+import { buttonStyle } from './jsCss/appCss'
+
+
 class App extends Component {
   constructor(props) {
     super(props)
+    this.state = Object.assign({}, props, { isLogged: false, isAdmin: false, })
 
-    this.state = {
-      isLogged: true,
-      isAdmin: true,
-    }
   }
+
   render() {
     return (
       <MuiThemeProvider>
         <div>
           <AppBar>
           </AppBar>
-          <RaisedButton label="Register" secondary={true} href={'/register'} />
-          <RaisedButton label="Login" secondary={true} href={'/login'} />
-          <RaisedButton label="Tasks" secondary={true} href={'/tasks'} />
-          <RaisedButton label="Users" secondary={true} href={'/users'} />
-          { this.state.isLogged ? <RaisedButton label="AddTask" secondary={true} /> : null }
-          { this.state.isAdmin ? <RaisedButton label="AddUser" secondary={true} /> : null }
-          <RaisedButton label="Logout" secondary={true} style={{ float: 'right' }} />
+          <FlatButton
+            label="Register"
+            style={buttonStyle}
+            onClick={() => { this.props.history.push('/register') }} />
+          <FlatButton
+            label="Login"
+            style={buttonStyle}
+            onClick={() => { this.props.history.push('/login') }} />
+          <FlatButton
+            label="Tasks"
+            style={buttonStyle}
+            onClick={() => { this.props.history.push('/tasks') }} />
+          <FlatButton
+            label="Users"
+            style={buttonStyle}
+            onClick={() => { this.props.history.push('/users') }} />
+          <FlatButton
+            label="AddTask"
+            style={buttonStyle}
+            onClick={() => { this.props.history.push('/addtask') }} />
+          <FlatButton
+            label="AddUser"
+            style={buttonStyle}
+            onClick={() => { this.props.history.push('/adduser') }} />
+          <FlatButton
+            label="Logout"
+            style={Object.assign({}, buttonStyle, { float: 'right' })}
+            onClick={() => { this.props.history.push('/logout') }} />
           <Switch>
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
-            <Route path="/tasks" component={() =>{return <TasksTable info={testProps}/>}} />
+            <Route path="/tasks" component={() => { return <TasksTable info={testProps} /> }} />
             <Route path="/users" component={UsersTable} />
-            <Route path="/home" component={HomePage} />
+            <Route path="/addtask" component={() => { return <TaskEditForm open={true} /> }} />
           </Switch>
         </div>
       </MuiThemeProvider>
@@ -51,7 +77,13 @@ class App extends Component {
   }
 }
 
-const testProps =  {
+function mapStateToProps(state, ownProps) {
+  return {
+    currentUser: state.users
+  }
+}
+
+const testProps = {
   users: [
     {
       userName: "Steve",
@@ -87,4 +119,9 @@ const testProps =  {
   tableHeaders: ["TaskOwner", "TaskTitle", "TaskDescription", "TaskPriority", "Editable"]
 };
 
-export default withRouter(App);
+export default withRouter(connect(mapStateToProps)(App));
+
+/* const style={
+  color: "#FFFFFF",
+  backgroundColor: "#FF4081"
+} */

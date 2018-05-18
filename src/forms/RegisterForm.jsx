@@ -90,13 +90,13 @@ const style = {
 
 
 Register.propTypes={
-    usersArr: PropTypes.array.isRequired,
+    userObj: PropTypes.object.isRequired,
     createUser: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, ownProps) {
    return{
-       usersArr:state.users
+       userObj:state.users
    }
 }
 

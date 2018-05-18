@@ -11,13 +11,14 @@ const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>
-        <Router>
+        <Router >
             <App />
         </Router>
     </Provider>, document.getElementById('root'));
 registerServiceWorker();
 
 function getStorageData() {
+    debugger;
     let appData = JSON.parse(localStorage.getItem('appData'));
     if (!appData) {
         appData = {

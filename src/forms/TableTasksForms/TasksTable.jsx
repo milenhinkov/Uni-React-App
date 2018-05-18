@@ -7,7 +7,7 @@ import {
   TableRow
 } from 'material-ui/Table';
 import TableInfoRow from './TableInfoRow'
-import TaskEditForm from './TaskEditForm'
+
 
 
 export default class TasksTable extends Component {
@@ -45,7 +45,6 @@ export default class TasksTable extends Component {
             {this.drowRows(this.props.info.tasks)}
           </TableBody>
         </Table>
-        <TaskEditForm open={this.state.openEditForm} />
       </div>
     );
   }
