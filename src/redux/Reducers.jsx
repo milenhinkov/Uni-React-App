@@ -1,13 +1,15 @@
-import {REGISTER_USER, LOGOUT_USER} from './ActionTypes'
+import { REGISTER_USER, LOGOUT_USER, LOGIN_USER } from './ActionTypes'
 
- function registerUserReducer(state = {}, action){
+function registerUserReducer(state = {}, action) {
   switch (action.type) {
     case REGISTER_USER:
-      return  action.user;
+      return action.user;
     case LOGOUT_USER:
-      return action.user; 
+      return action.user;
+    case LOGIN_USER:
+      return action.user;
     default:
       return state;
   }
 }
-export {/* anotherReducers, */ registerUserReducer}
+export {/* anotherReducers, */ registerUserReducer }

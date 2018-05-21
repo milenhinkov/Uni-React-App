@@ -4,6 +4,7 @@ import TextField from 'material-ui/TextField';
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+
 import PropTypes from 'prop-types'; 
 
 import { createUser } from '../redux/ActionCreators'
@@ -87,13 +88,13 @@ class Register extends Component {
 }
 
 Register.propTypes={
-    userObj: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
     createUser: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state, ownProps) {
    return{
-       userObj:state.users
+       currentUser:state.currentUser
    }
 }
 

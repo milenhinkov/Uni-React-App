@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import PropTypes from 'prop-types'; 
+
+import { loginUser } from '../redux/ActionCreators'
+
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -11,12 +18,13 @@ class Login extends Component {
             email: '',
             role: 'user'
         }
+        this.loginOnClock = this.loginOnClock.bind(this);
     }
 
-    submitRegister(event) {
-        let user = localStorage.getItem(this.state.username, JSON.stringify(this.state));
+    loginOnClock(){
+        this.props.login(this.state);
+        this.props.history.push('/tasks');
     }
-
 
     render() {
         return (
@@ -34,12 +42,27 @@ class Login extends Component {
                     onChange={(event, newValue) => this.setState({ password: newValue })}
                 />
                 <br />
-                <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.submitRegister(event)} />
+                <RaisedButton label="Submit" primary={true}  onClick={this.loginOnClock}  />
             </div>
         );
     }
 }
-const style = {
-    margin: 15,
-};
-export default Login;
+
+Login.propTypes={
+    currentUser: PropTypes.object.isRequired,
+    login: PropTypes.func.isRequired
+}
+
+function mapStateToProps(state, ownProps) {
+   return{
+       currentUser:state.currentUser
+   }
+}
+
+function mapDispatchToProps(dispatch) {
+    return{
+        login: bindActionCreators(loginUser, dispatch)
+    }
+ }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

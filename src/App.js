@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 // --- custom components-------------
 import Register from './forms/RegisterForm'
@@ -18,6 +19,8 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 
 //---- redux components ------------- 
 import { connect } from 'react-redux'
+import { logoutUser } from './redux/ActionCreators'
+import { bindActionCreators } from 'redux'
 
 //---- external css -----------------
 import { buttonStyle } from './modulesCss/appCss'
@@ -28,6 +31,7 @@ class App extends Component {
     super(props)
     this.state = Object.assign({}, props, { isLogged: false, isAdmin: false, });
     this.initStorage();
+    this.logOutUser = this.logOutUser.bind(this);
   }
 
   initStorage() {
@@ -41,10 +45,15 @@ class App extends Component {
     if (nextProps.currentUser !== this.props.currentUser) {
       this.setState((prevState) => {
         prevState.currentUser = nextProps.currentUser;
-        prevState.isLogged = true;
+        prevState.isLogged = typeof (nextProps.currentUser.username) !== 'undefined';
         prevState.isAdmin = nextProps.currentUser.role === 'admin';
       });
     }
+  }
+
+  logOutUser() {
+    this.props.logout();
+    this.props.history.push('/logout');
   }
 
   render() {
@@ -80,13 +89,13 @@ class App extends Component {
           {this.state.isLogged ? <FlatButton
             label="Logout"
             style={Object.assign({}, buttonStyle, { float: 'right' })}
-            onClick={() => { this.props.history.push('/logout') }} /> : null}
+            onClick={this.logOutUser} /> : null}
           <Switch>
-            <Route path="/register" component={Register} />
-            <Route path="/login" component={Login} />
+            {!this.state.isLogged ? <Route path="/register" component={Register} /> : null}
+            {!this.state.isLogged ? <Route path="/login" component={Login} /> : null}
             {this.state.isLogged ? <Route path="/tasks" component={() => { return <TasksTable info={testProps} /> }} /> : null}
             {this.state.isAdmin ? <Route path="/users" component={UsersTable} /> : null}
-            <Route path="/addtask" component={() => { return <TaskEditForm open={true} /> }} />
+            {this.state.isLogged ? <Route path="/addtask" component={() => { return <TaskEditForm open={true} /> }} /> : null}
           </Switch>
         </div>
       </MuiThemeProvider>
@@ -94,9 +103,20 @@ class App extends Component {
   }
 }
 
+App.propTypes = {
+  logout: PropTypes.func.isRequired
+}
+
+
 function mapStateToProps(state, ownProps) {
   return {
-    currentUser: state.users
+    currentUser: state.currentUser
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    logout: bindActionCreators(logoutUser, dispatch)
   }
 }
 
@@ -136,9 +156,4 @@ const testProps = {
   tableHeaders: ["TaskOwner", "TaskTitle", "TaskDescription", "TaskPriority", "Editable"]
 };
 
-export default withRouter(connect(mapStateToProps)(App));
-
-/* const style={
-          color: "#FFFFFF",
-        backgroundColor: "#FF4081"
-} */
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
