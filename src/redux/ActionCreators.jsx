@@ -20,9 +20,9 @@ function logoutUser(){
 }
 
 function loginUser(user){
+  localStorage.setItem('currentUser', JSON.stringify(user));
   let userResult = {};
   let users = JSON.parse(localStorage.getItem('users'));
-  debugger;
   users.forEach(storedUser => {
     if(user.username === storedUser.username && user.password === storedUser.password){
       userResult = storedUser;

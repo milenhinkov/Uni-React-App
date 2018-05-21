@@ -14,9 +14,7 @@ class Login extends Component {
         super(props);
         this.state = {
             username: '',
-            password: '',
-            email: '',
-            role: 'user'
+            password: ''
         }
         this.loginOnClock = this.loginOnClock.bind(this);
     }

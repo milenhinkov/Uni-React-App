@@ -15,12 +15,12 @@ export default class UsersTable extends Component {
     this.state = {
       users: [
         {
-          userName: "Steve",
+          username: "Steve",
           password: "SecurePass",
           role: "user",
         },
         {
-          userName: "Bob",
+          username: "Bob",
           password: "NotSecurePass",
           role: "user",
         }],
@@ -42,7 +42,7 @@ export default class UsersTable extends Component {
         taskPriority: "Low"
       }],
       currentUser: {
-        userName: "Steve",
+        username: "Steve",
         password: "SecurePass",
         role: "user",
       },
@@ -59,7 +59,7 @@ export default class UsersTable extends Component {
    drowRows(collection) {
     return collection.map((row, i) => {
       return (
-        <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.userName === row.Owner || this.state.currentUser.role === "admin"} />)
+        <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.username === row.Owner || this.state.currentUser.role === "admin"} />)
     })
   } 
 

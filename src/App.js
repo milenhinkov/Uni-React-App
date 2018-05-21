@@ -37,7 +37,11 @@ class App extends Component {
   initStorage() {
     let usersArr = localStorage.getItem('users');
     if (!usersArr) {
-      localStorage.setItem('users', JSON.stringify([]));
+      localStorage.setItem('users', JSON.stringify([{
+        username: "Steve",
+        password: "SecurePass",
+        role: "admin"
+      }]));
     }
   }
 
