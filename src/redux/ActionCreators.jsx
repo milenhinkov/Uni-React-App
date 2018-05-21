@@ -1,17 +1,19 @@
-import * as actionTypes from './ActionTypes'
-
-function createCourse(course) {
-  return {
-    type: actionTypes.CREATE_COURSE,
-    course
-  }
-}
+import {REGISTER_USER, LOGOUT_USER} from './ActionTypes'
 
 function createUser(user){
+  localStorage.setItem('currentUser', JSON.stringify(user));
   return{
-    type: actionTypes.CREATE_USER,
+    type: REGISTER_USER,
     user
   }
 }
 
-export {createCourse, createUser }
+function logoutUser(user){
+  localStorage.removeItem('currentUser');
+  return{
+    type: LOGOUT_USER,
+    user
+  }
+}
+
+export { createUser }

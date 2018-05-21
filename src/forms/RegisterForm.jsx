@@ -55,6 +55,7 @@ class Register extends Component {
                 }) : null
         }); 
         this.props.createUser(this.state);
+        this.props.history.push('/tasks');
     }
 
     render() {
@@ -79,15 +80,11 @@ class Register extends Component {
                     onChange={(event, newValue) => this.setState({ password: newValue })}
                 />
                 <br />
-                <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.submitRegister(event)} />
+                <RaisedButton label="Submit" primary={true} onClick={(event) => this.submitRegister(event)} />
             </div>
         );
     }
 }
-const style = {
-    margin: 15,
-};
-
 
 Register.propTypes={
     userObj: PropTypes.object.isRequired,

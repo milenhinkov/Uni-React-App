@@ -1,9 +1,11 @@
-import * as actionTypes from './ActionTypes'
+import {REGISTER_USER, LOGOUT_USER} from './ActionTypes'
 
  function registerUserReducer(state = {}, action){
   switch (action.type) {
-    case actionTypes.CREATE_USER:
+    case REGISTER_USER:
       return  action.user;
+    case LOGOUT_USER:
+      return action.user; 
     default:
       return state;
   }

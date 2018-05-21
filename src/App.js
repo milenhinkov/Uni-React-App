@@ -20,14 +20,31 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 
 //---- external css -----------------
-import { buttonStyle } from './jsCss/appCss'
+import { buttonStyle } from './modulesCss/appCss'
 
 
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = Object.assign({}, props, { isLogged: false, isAdmin: false, })
+    this.state = Object.assign({}, props, { isLogged: false, isAdmin: false, });
+    this.initStorage();
+  }
 
+  initStorage() {
+    let usersArr = localStorage.getItem('users');
+    if (!usersArr) {
+      localStorage.setItem('users', JSON.stringify([]));
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentUser !== this.props.currentUser) {
+      this.setState((prevState) => {
+        prevState.currentUser = nextProps.currentUser;
+        prevState.isLogged = true;
+        prevState.isAdmin = nextProps.currentUser.role === 'admin';
+      });
+    }
   }
 
   render() {
@@ -36,39 +53,39 @@ class App extends Component {
         <div>
           <AppBar>
           </AppBar>
-          <FlatButton
+          {!this.state.isLogged ? <FlatButton
             label="Register"
             style={buttonStyle}
-            onClick={() => { this.props.history.push('/register') }} />
-          <FlatButton
+            onClick={() => { this.props.history.push('/register') }} /> : null}
+          {!this.state.isLogged ? <FlatButton
             label="Login"
             style={buttonStyle}
-            onClick={() => { this.props.history.push('/login') }} />
-          <FlatButton
+            onClick={() => { this.props.history.push('/login') }} /> : null}
+          {this.state.isLogged ? <FlatButton
             label="Tasks"
             style={buttonStyle}
-            onClick={() => { this.props.history.push('/tasks') }} />
-          <FlatButton
+            onClick={() => { this.props.history.push('/tasks') }} /> : null}
+          {this.state.isAdmin ? <FlatButton
             label="Users"
             style={buttonStyle}
-            onClick={() => { this.props.history.push('/users') }} />
-          <FlatButton
+            onClick={() => { this.props.history.push('/users') }} /> : null}
+          {this.state.isLogged ? <FlatButton
             label="AddTask"
             style={buttonStyle}
-            onClick={() => { this.props.history.push('/addtask') }} />
-          <FlatButton
+            onClick={() => { this.props.history.push('/addtask') }} /> : null}
+          {this.state.isAdmin ? <FlatButton
             label="AddUser"
             style={buttonStyle}
-            onClick={() => { this.props.history.push('/adduser') }} />
-          <FlatButton
+            onClick={() => { this.props.history.push('/adduser') }} /> : null}
+          {this.state.isLogged ? <FlatButton
             label="Logout"
             style={Object.assign({}, buttonStyle, { float: 'right' })}
-            onClick={() => { this.props.history.push('/logout') }} />
+            onClick={() => { this.props.history.push('/logout') }} /> : null}
           <Switch>
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
-            <Route path="/tasks" component={() => { return <TasksTable info={testProps} /> }} />
-            <Route path="/users" component={UsersTable} />
+            {this.state.isLogged ? <Route path="/tasks" component={() => { return <TasksTable info={testProps} /> }} /> : null}
+            {this.state.isAdmin ? <Route path="/users" component={UsersTable} /> : null}
             <Route path="/addtask" component={() => { return <TaskEditForm open={true} /> }} />
           </Switch>
         </div>
@@ -122,6 +139,6 @@ const testProps = {
 export default withRouter(connect(mapStateToProps)(App));
 
 /* const style={
-  color: "#FFFFFF",
-  backgroundColor: "#FF4081"
+          color: "#FFFFFF",
+        backgroundColor: "#FF4081"
 } */
