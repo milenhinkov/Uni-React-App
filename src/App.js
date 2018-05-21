@@ -40,6 +40,7 @@ class App extends Component {
       localStorage.setItem('users', JSON.stringify([{
         username: "Steve",
         password: "SecurePass",
+        email: "",
         role: "admin"
       }]));
     }
@@ -98,7 +99,7 @@ class App extends Component {
             {!this.state.isLogged ? <Route path="/register" component={Register} /> : null}
             {!this.state.isLogged ? <Route path="/login" component={Login} /> : null}
             {this.state.isLogged ? <Route path="/tasks" component={() => { return <TasksTable info={testProps} /> }} /> : null}
-            {this.state.isAdmin ? <Route path="/users" component={UsersTable} /> : null}
+            {this.state.isAdmin ? <Route path="/users" component={() => {return <UsersTable users={JSON.parse(localStorage.getItem('users'))} />}} /> : null}
             {this.state.isLogged ? <Route path="/addtask" component={() => { return <TaskEditForm open={true} /> }} /> : null}
           </Switch>
         </div>

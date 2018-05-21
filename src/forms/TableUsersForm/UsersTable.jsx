@@ -4,64 +4,60 @@ import {
   TableBody,
   TableHeader,
   TableHeaderColumn,
-  TableRow
+  TableRow,
+  TableRowColumn
 } from 'material-ui/Table';
-import TableInfoRow from '../TableTasksForms/TableInfoRow'
+import Checkbox from 'material-ui/Checkbox';
+import FlatButton from 'material-ui/FlatButton';
 
+import { buttonStyle } from '../../modulesCss/appCss'
 
 export default class UsersTable extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      users: [
-        {
-          username: "Steve",
-          password: "SecurePass",
-          role: "user",
-        },
-        {
-          username: "Bob",
-          password: "NotSecurePass",
-          role: "user",
-        }],
-      tasks: [{
-        owner: "Bob",
-        taskTitle: "Important task",
-        taskDescription: "The Task Is Really Important",
-        taskPriority: "High"
-      }, {
-        owner: "Bob",
-        taskTitle: "Second Important task",
-        taskDescription: "The Task Is Really Important",
-        taskPriority: "High"
-      },
-      {
-        owner: "Steve",
-        taskTitle: "Unimportant task",
-        taskDescription: "The Task Is not really Important",
-        taskPriority: "Low"
-      }],
-      currentUser: {
-        username: "Steve",
-        password: "SecurePass",
-        role: "user",
-      },
-      tableHeaders: ["UserName", "Password", "Role"]
-    }
+    let map = [];
+    this.props.users.forEach(user => {
+      if (user.role === 'user') {
+        map[user.username] = false;
+      }
+    });
+    this.state = Object.assign({}, props, { toGiveAdminRights: map });
     this.drowHeaders = this.drowHeaders.bind(this);
-    this.drowRows = this.drowRows.bind(this); 
+    this.drowRows = this.drowRows.bind(this);
+    this.storeAdminReferences = this.storeAdminReferences.bind(this);
   }
 
-  drowHeaders(headers) {
-    return headers.map((head) => { return <TableHeaderColumn key={head}>{head}</TableHeaderColumn> })
+  drowHeaders() {
+    let _headers = Object.keys(this.state.users[0]).map((property, index) => { return <TableHeaderColumn key={index}>{property}</TableHeaderColumn> })
+    _headers.push(<TableHeaderColumn key={'makeadmin'}>MakeAdmin</TableHeaderColumn>);
+    return _headers;
   }
 
-   drowRows(collection) {
-    return collection.map((row, i) => {
-      return (
-        <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.username === row.Owner || this.state.currentUser.role === "admin"} />)
-    })
-  } 
+  drowRows() {
+    return this.state.users.map(
+      (_user, outIndex) => {
+        let _rowValues = Object.values(_user).map(
+          (_userProp, index) => { return <TableRowColumn key={index + _user.username}>{_userProp}</TableRowColumn> })
+        if (_user.role === 'user') {
+          _rowValues.push(
+            <TableRowColumn key={outIndex + _user.username}>
+              <Checkbox value={_user.username} onCheck={this.storeAdminReferences} style={{ margin: "1em", left: "1.5em" }} />
+            </TableRowColumn>)
+        } else {
+          _rowValues.push(<TableRowColumn key={outIndex + _user.username}><Checkbox disabled={true} style={{ margin: "1em", left: "1.5em" }} /></TableRowColumn>)
+        }
+        return <TableRow key={_user.username}> {_rowValues} </TableRow>
+      });
+  }
+
+  storeAdminReferences(ev) {
+    /* this.setState((prevState) => { return toGiveAdminRights[ev.target.value]: !toGiveAdminRights[ev.target.value] });
+    this.setState((prevState) => {
+      return { counter: prevState.counter + props.step };
+    }); */
+    /* this.setState(prevState => { })
+    ev.target.value */
+  }
 
   render() {
     return (
@@ -69,14 +65,17 @@ export default class UsersTable extends Component {
         <Table selectable={false}>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
-              {this.drowHeaders(this.state.tableHeaders)}
+              {this.drowHeaders()}
             </TableRow>
           </TableHeader >
           <TableBody displayRowCheckbox={false}>
-            { this.drowRows(this.state.users) }
+            {this.drowRows()}
           </TableBody>
         </Table>
-        {/*  <TaskEditForm open={this.state.openEditForm} /> */}
+        <FlatButton
+          label="SaveChanges"
+          style={buttonStyle}
+          onClick={() => { console.log('clicked') }} />
       </div>
     );
   }
