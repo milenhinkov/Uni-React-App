@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGOUT_USER, LOGIN_USER, LOAD_USERS, MAKE_USERS_ADMIN } from './ActionTypes'
+import { REGISTER_USER, LOGOUT_USER, LOGIN_USER, LOAD_USERS, MAKE_USERS_ADMIN, DELETE_USERS } from './ActionTypes'
 
 function registerUserReducer(state = {}, action) {
   switch (action.type) {
@@ -16,9 +16,11 @@ function registerUserReducer(state = {}, action) {
 function adminReducer(state = [], action) {
   switch (action.type) {
     case LOAD_USERS:
-      return action.users;
+      return JSON.parse(JSON.stringify(action.users));
     case MAKE_USERS_ADMIN:
-      return action.users;
+      return JSON.parse(JSON.stringify(action.users));
+    case DELETE_USERS:
+      return JSON.parse(JSON.stringify(action.users));
     default:
       return state;
   }

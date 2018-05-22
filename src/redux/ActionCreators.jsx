@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGOUT_USER, LOGIN_USER, LOAD_USERS, MAKE_USERS_ADMIN } from './ActionTypes'
+import { REGISTER_USER, LOGOUT_USER, LOGIN_USER, LOAD_USERS, MAKE_USERS_ADMIN, DELETE_USERS } from './ActionTypes'
 
 function createUser(user) {
   localStorage.setItem('currentUser', JSON.stringify(user));
@@ -58,4 +58,28 @@ function makeUsersAdmins(arrayOfUsernames) {
   }
 }
 
-export { createUser, logoutUser, loginUser, loadUsers, makeUsersAdmins }
+function deleteUsers(arrayOfUsernames) {
+  let storedUsers = JSON.parse(localStorage.getItem('users'));
+  let resutlIndexes = [];
+  let userIndex = 0;
+  for(let user of storedUsers){
+    for(let _username of arrayOfUsernames){
+      if(user.username === _username){
+        resutlIndexes.unshift(userIndex);
+      }
+    }
+    userIndex++;
+  }
+  for(let i = 0; i < resutlIndexes.length; i++){
+    storedUsers.splice(resutlIndexes[i], 1);
+  }
+  localStorage.setItem('users',JSON.stringify(storedUsers));
+  //TODO: Dont forget to remove and all tasks related with deleted users!!!!
+  return {
+    type: DELETE_USERS,
+    users: storedUsers
+  }
+}
+
+
+export { createUser, logoutUser, loginUser, loadUsers, makeUsersAdmins, deleteUsers }

@@ -13,7 +13,7 @@ import TextField from 'material-ui/TextField';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import { loadUsers, makeUsersAdmins } from '../../redux/ActionCreators'
+import { loadUsers, makeUsersAdmins, deleteUsers } from '../../redux/ActionCreators'
 import { bindActionCreators } from 'redux'
 
 import { buttonStyle } from '../../modulesCss/appCss'
@@ -83,23 +83,36 @@ class UsersTable extends Component {
     this.state;
     let newState = Object.assign({}, this.state);
     newState.toDelete[ev.target.value] = !newState.toDelete[ev.target.value];
+    if(newState.toGiveAdminRights[ev.target.value]){
+      newState.toGiveAdminRights[ev.target.value] = false;
+    }
     this.setState(newState);
   }
 
   storeAdminReferences(ev) {
     let newState = Object.assign({}, this.state);
     newState.toGiveAdminRights[ev.target.value] = !newState.toGiveAdminRights[ev.target.value];
+    if(newState.toDelete[ev.target.value]){
+      newState.toDelete[ev.target.value] = false;
+    }
     this.setState(newState);
   }
 
   saveChanges() {
-    let resArr = [];
+    let toGiveAdminRightsArray = [];
     for (let key in this.state.toGiveAdminRights) {
       if (this.state.toGiveAdminRights[key]) {
-        resArr.push(key);
+        toGiveAdminRightsArray.push(key);
       }
     }
-    this.props._makeUsersAdmins(resArr);
+    this.props._makeUsersAdmins(toGiveAdminRightsArray); 
+    let toDeleteUserArray = [];
+    for (let key in this.state.toDelete) {
+      if (this.state.toDelete[key]) {
+        toDeleteUserArray.push(key);
+      }
+    }
+    this.props._deleteUsers(toDeleteUserArray);
   }
 
   render() {
@@ -137,7 +150,8 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     _loadUsers: bindActionCreators(loadUsers, dispatch),
-    _makeUsersAdmins: bindActionCreators(makeUsersAdmins, dispatch)
+    _makeUsersAdmins: bindActionCreators(makeUsersAdmins, dispatch),
+    _deleteUsers: bindActionCreators(deleteUsers, dispatch)
   }
 }
 
