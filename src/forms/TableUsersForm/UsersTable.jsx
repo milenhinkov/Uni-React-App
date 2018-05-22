@@ -9,6 +9,7 @@ import {
 } from 'material-ui/Table';
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
@@ -27,12 +28,13 @@ class UsersTable extends Component {
       }
     });
     this.props._loadUsers();
-    this.state = Object.assign({}, props, { toGiveAdminRights: map });
-    
+    this.state = Object.assign({}, props, { toGiveAdminRights: map }, {toDelete: JSON.parse(JSON.stringify(map))});
+
     this.drowHeaders = this.drowHeaders.bind(this);
     this.drowRows = this.drowRows.bind(this);
     this.storeAdminReferences = this.storeAdminReferences.bind(this);
-    this.giveAdminRights = this.giveAdminRights.bind(this);
+    this.saveChanges = this.saveChanges.bind(this);
+    this.usersForDeleting = this.usersForDeleting.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,36 +45,54 @@ class UsersTable extends Component {
   drowHeaders() {
     if (this.state.users[0]) {
       let _headers = Object.keys(this.state.users[0]).map((property, index) => { return <TableHeaderColumn key={index}>{property}</TableHeaderColumn> })
-      _headers.push(<TableHeaderColumn key={'makeadmin'}>MakeAdmin</TableHeaderColumn>);
+      _headers.push(<TableHeaderColumn key={'makeadmin'}>makeAdmin</TableHeaderColumn>);
+      _headers.push(<TableHeaderColumn key={'deleteuser'}>deleteNonAdmin</TableHeaderColumn>);
       return _headers;
     }
     return null;
   }
 
   drowRows() {
-    return this.state.users.map(
+    let mappedRows = this.state.users.map(
       (_user, outIndex) => {
         let _rowValues = Object.values(_user).map(
-          (_userProp, index) => { return <TableRowColumn key={index + _user.username}>{_userProp}</TableRowColumn> })
+          (_userProp, index) => { return <TableRowColumn key={index}>{_userProp}</TableRowColumn> })
         if (_user.role === 'user') {
           _rowValues.push(
             <TableRowColumn key={outIndex + _user.username}>
-              <Checkbox value={_user.username} onCheck={this.storeAdminReferences} style={{ margin: "1em", left: "1.5em" }} />
+              <Checkbox value={_user.username} checked={this.state.toGiveAdminRights[_user.username]} onCheck={this.storeAdminReferences} style={{ margin: "1em", left: "1.5em" }} />
             </TableRowColumn>)
         } else {
-          _rowValues.push(<TableRowColumn key={outIndex + _user.username}><Checkbox disabled={true} style={{ margin: "1em", left: "1.5em" }} /></TableRowColumn>)
+          _rowValues.push(<TableRowColumn key={outIndex}><Checkbox disabled={true} style={{ margin: "1em", left: "1.5em" }} /></TableRowColumn>)
+        }
+        if (_user.role === 'user') {
+          _rowValues.push(
+            <TableRowColumn key={outIndex}>
+              <Checkbox value={_user.username} checked={this.state.toDelete[_user.username]} onCheck={this.usersForDeleting} style={{ margin: "1em", left: "1.5em" }} />
+            </TableRowColumn>)
+        } else {
+          _rowValues.push(<TableRowColumn key={outIndex}><Checkbox disabled={true} style={{ margin: "1em", left: "1.5em" }} /></TableRowColumn>)
         }
         return <TableRow key={_user.username}> {_rowValues} </TableRow>
       });
+
+      return mappedRows;
+  }
+
+  usersForDeleting(ev){
+    this.state;
+    let newState = Object.assign({}, this.state);
+    newState.toDelete[ev.target.value] = !newState.toDelete[ev.target.value];
+    this.setState(newState);
   }
 
   storeAdminReferences(ev) {
-    let newState = this.state;
+    let newState = Object.assign({}, this.state);
     newState.toGiveAdminRights[ev.target.value] = !newState.toGiveAdminRights[ev.target.value];
     this.setState(newState);
   }
 
-  giveAdminRights() {
+  saveChanges() {
     let resArr = [];
     for (let key in this.state.toGiveAdminRights) {
       if (this.state.toGiveAdminRights[key]) {
@@ -98,7 +118,7 @@ class UsersTable extends Component {
         <FlatButton
           label="SaveChanges"
           style={buttonStyle}
-          onClick={this.giveAdminRights} />
+          onClick={this.saveChanges} />
       </div>
     );
   }

@@ -3,11 +3,11 @@ import { REGISTER_USER, LOGOUT_USER, LOGIN_USER, LOAD_USERS, MAKE_USERS_ADMIN } 
 function registerUserReducer(state = {}, action) {
   switch (action.type) {
     case REGISTER_USER:
-      return action.user;
+      return Object.assign({}, action.user);
     case LOGOUT_USER:
-      return action.user;
+      return Object.assign({}, action.user);
     case LOGIN_USER:
-      return action.user;
+      return Object.assign({}, action.user);
     default:
       return state;
   }
