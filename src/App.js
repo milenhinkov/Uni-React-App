@@ -43,6 +43,16 @@ class App extends Component {
         role: "admin"
       }]));
     }
+    let tasksArr = localStorage.getItem('tasks');
+    if (!tasksArr) {
+      localStorage.setItem('tasks', JSON.stringify([{
+        owner: "Steve",
+        taskTitle: "Important task",
+        taskDescription: "The Task Is Really Important",
+        taskPriority: 3,
+        status: "finished"
+      }]));
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -90,7 +100,7 @@ class App extends Component {
             {!this.state.isLogged ? <Route path="/register" component={Register} /> : null}
             {!this.state.isLogged ? <Route path="/login" component={Login} /> : null}
             {this.state.isLogged ? <Route path="/tasks" component={() => { return <TasksTable data={{}} /> }} /> : null}
-            {this.state.isAdmin ? <Route path="/users" component={() => {return <UsersTable users={[]} />}} /> : null}
+            {this.state.isAdmin ? <Route path="/users" component={() => { return <UsersTable users={[]} /> }} /> : null}
           </Switch>
         </div>
       </MuiThemeProvider>

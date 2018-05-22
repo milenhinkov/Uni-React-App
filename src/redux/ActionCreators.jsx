@@ -62,10 +62,12 @@ function deleteUsers(arrayOfUsernames) {
   let storedUsers = JSON.parse(localStorage.getItem('users'));
   let resutlIndexes = [];
   let userIndex = 0;
+  let removedUsersUsernames = [];
   for(let user of storedUsers){
     for(let _username of arrayOfUsernames){
       if(user.username === _username){
         resutlIndexes.unshift(userIndex);
+        removedUsersUsernames.push(_username);
       }
     }
     userIndex++;
@@ -74,7 +76,21 @@ function deleteUsers(arrayOfUsernames) {
     storedUsers.splice(resutlIndexes[i], 1);
   }
   localStorage.setItem('users',JSON.stringify(storedUsers));
-  //TODO: Dont forget to remove and all tasks related with deleted users!!!!
+  let tasksArray = JSON.parse(localStorage.getItem('tasks'));
+  let tasksIndexes = [];
+  let taskIndex = 0;
+  for(let task of tasksArray){
+    for(let username of removedUsersUsernames){
+      if(task.owner === username){
+        tasksIndexes.unshift(taskIndex);
+      }
+    }
+    taskIndex++;
+  }
+  for(let i = 0; i < tasksIndexes.length; i++){
+    tasksArray.splice(tasksIndexes[i], 1);
+  }
+  localStorage.setItem('tasks', JSON.stringify(tasksArray));
   return {
     type: DELETE_USERS,
     users: storedUsers
