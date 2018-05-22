@@ -10,9 +10,14 @@ import {
 import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
 
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
+import { loadUsers, makeUsersAdmins } from '../../redux/ActionCreators'
+import { bindActionCreators } from 'redux'
+
 import { buttonStyle } from '../../modulesCss/appCss'
 
-export default class UsersTable extends Component {
+class UsersTable extends Component {
   constructor(props) {
     super(props)
     let map = [];
@@ -21,16 +26,27 @@ export default class UsersTable extends Component {
         map[user.username] = false;
       }
     });
+    this.props._loadUsers();
     this.state = Object.assign({}, props, { toGiveAdminRights: map });
+    
     this.drowHeaders = this.drowHeaders.bind(this);
     this.drowRows = this.drowRows.bind(this);
     this.storeAdminReferences = this.storeAdminReferences.bind(this);
+    this.giveAdminRights = this.giveAdminRights.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let newState = Object.assign({}, this.state, nextProps);
+    this.setState(newState);
   }
 
   drowHeaders() {
-    let _headers = Object.keys(this.state.users[0]).map((property, index) => { return <TableHeaderColumn key={index}>{property}</TableHeaderColumn> })
-    _headers.push(<TableHeaderColumn key={'makeadmin'}>MakeAdmin</TableHeaderColumn>);
-    return _headers;
+    if (this.state.users[0]) {
+      let _headers = Object.keys(this.state.users[0]).map((property, index) => { return <TableHeaderColumn key={index}>{property}</TableHeaderColumn> })
+      _headers.push(<TableHeaderColumn key={'makeadmin'}>MakeAdmin</TableHeaderColumn>);
+      return _headers;
+    }
+    return null;
   }
 
   drowRows() {
@@ -51,12 +67,19 @@ export default class UsersTable extends Component {
   }
 
   storeAdminReferences(ev) {
-    /* this.setState((prevState) => { return toGiveAdminRights[ev.target.value]: !toGiveAdminRights[ev.target.value] });
-    this.setState((prevState) => {
-      return { counter: prevState.counter + props.step };
-    }); */
-    /* this.setState(prevState => { })
-    ev.target.value */
+    let newState = this.state;
+    newState.toGiveAdminRights[ev.target.value] = !newState.toGiveAdminRights[ev.target.value];
+    this.setState(newState);
+  }
+
+  giveAdminRights() {
+    let resArr = [];
+    for (let key in this.state.toGiveAdminRights) {
+      if (this.state.toGiveAdminRights[key]) {
+        resArr.push(key);
+      }
+    }
+    this.props._makeUsersAdmins(resArr);
   }
 
   render() {
@@ -75,8 +98,27 @@ export default class UsersTable extends Component {
         <FlatButton
           label="SaveChanges"
           style={buttonStyle}
-          onClick={() => { console.log('clicked') }} />
+          onClick={this.giveAdminRights} />
       </div>
     );
   }
 }
+
+UsersTable.propTypes = {
+  users: PropTypes.array.isRequired,
+}
+
+function mapStateToProps(state, ownProps) {
+  return {
+    users: state.users
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    _loadUsers: bindActionCreators(loadUsers, dispatch),
+    _makeUsersAdmins: bindActionCreators(makeUsersAdmins, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UsersTable);

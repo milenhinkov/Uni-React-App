@@ -6,28 +6,24 @@ import {
   TableHeaderColumn,
   TableRow
 } from 'material-ui/Table';
-import TableInfoRow from './TableInfoRow'
 
 
 
 export default class TasksTable extends Component {
   constructor(props) {
     super(props)
-    this.state = props.info;
+    this.state = {};
     this.drowRows = this.drowRows.bind(this);
     this.drowHeaders = this.drowHeaders.bind(this);
   }
 
 
-  drowRows(collection) {
-    return collection.map((row, i) => {
-      return (
-        <TableInfoRow key={i} info={row} isEditable={this.state.currentUser.userName === row.Owner || this.state.currentUser.role === "admin"} />)
-    })
+  drowRows() {
+    return null;
   }
 
-  drowHeaders(headers) {
-    return headers.map((head) => { return <TableHeaderColumn key={head}>{head}</TableHeaderColumn> })
+  drowHeaders() {
+    return null;
   }
 
 
@@ -38,11 +34,11 @@ export default class TasksTable extends Component {
         <Table selectable={false}>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
-              {this.drowHeaders(this.state.tableHeaders)}
+              {/* this.drowHeaders */}
             </TableRow>
           </TableHeader >
           <TableBody displayRowCheckbox={false}>
-            {this.drowRows(this.props.info.tasks)}
+            {/* this.drowRows */}
           </TableBody>
         </Table>
       </div>

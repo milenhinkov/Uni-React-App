@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGOUT_USER, LOGIN_USER } from './ActionTypes'
+import { REGISTER_USER, LOGOUT_USER, LOGIN_USER, LOAD_USERS, MAKE_USERS_ADMIN } from './ActionTypes'
 
 function registerUserReducer(state = {}, action) {
   switch (action.type) {
@@ -12,4 +12,16 @@ function registerUserReducer(state = {}, action) {
       return state;
   }
 }
-export {/* anotherReducers, */ registerUserReducer }
+
+function adminReducer(state = [], action) {
+  switch (action.type) {
+    case LOAD_USERS:
+      return action.users;
+    case MAKE_USERS_ADMIN:
+      return action.users;
+    default:
+      return state;
+  }
+}
+
+export { adminReducer,  registerUserReducer }
