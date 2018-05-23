@@ -6,7 +6,6 @@ import Register from './forms/RegisterForm'
 import Login from './forms/LoginForm'
 import TasksTable from './forms/TableTasksForms/TasksTable'
 import UsersTable from './forms/TableUsersForm/UsersTable'
-import  TaskEditForm  from './forms/TableTasksForms/TaskEditForm'
 
 // --- fansy components--------------
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -100,7 +99,6 @@ class App extends Component {
             {!this.state.isLogged ? <Route path="/register" component={Register} /> : null}
             {!this.state.isLogged ? <Route path="/login" component={Login} /> : null}
             {this.state.isLogged ? <Route path="/tasks" component={() => { return <TasksTable tasks={[]} /> }} /> : null}
-            {this.state.isLogged ? <Route path="/tasks/editform" component={() => { return <TaskEditForm open={true} /> }} /> : null}
             {this.state.isAdmin ? <Route path="/users" component={() => { return <UsersTable users={[]} /> }} /> : null}
           </Switch>
         </div>

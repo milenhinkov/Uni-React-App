@@ -14,12 +14,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { loadTasks } from '../../redux/ActionCreators'
 import { bindActionCreators } from 'redux'
-
+import  TaskEditForm  from './TaskEditForm'
 
 class TasksTable extends Component {
   constructor(props) {
     super(props)
-    this.state = this.props;
+    this.state = Object.assign({}, this.props, {openEditForm:false, taskForEditing:{}});
     this.props._loadTasks();
     this.drowRows = this.drowRows.bind(this);
     this.drowHeaders = this.drowHeaders.bind(this);
@@ -78,6 +78,7 @@ class TasksTable extends Component {
             {this.drowRows()}
           </TableBody>
         </Table>
+        <TaskEditForm open={this.state.openEditForm}></TaskEditForm>
       </div>
     );
   }
