@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGOUT_USER, LOGIN_USER, LOAD_USERS, MAKE_USERS_ADMIN, DELETE_USERS } from './ActionTypes'
+import { REGISTER_USER, LOGOUT_USER, LOGIN_USER, LOAD_USERS, MAKE_USERS_ADMIN, DELETE_USERS, LOAD_TASKS } from './ActionTypes'
 
 function createUser(user) {
   localStorage.setItem('currentUser', JSON.stringify(user));
@@ -97,5 +97,13 @@ function deleteUsers(arrayOfUsernames) {
   }
 }
 
+function loadTasks(){
+  let storedTasks = JSON.parse(localStorage.getItem('tasks'));
+  return {
+    type: LOAD_TASKS,
+    tasks: storedTasks
+  }
+}
 
-export { createUser, logoutUser, loginUser, loadUsers, makeUsersAdmins, deleteUsers }
+
+export { createUser, logoutUser, loginUser, loadUsers, makeUsersAdmins, deleteUsers, loadTasks }
