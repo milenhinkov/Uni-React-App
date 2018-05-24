@@ -17,7 +17,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 
 //---- redux components ------------- 
 import { connect } from 'react-redux'
-import { logoutUser } from './redux/ActionCreators'
+import { logoutUser, isUserLoggedIn } from './redux/ActionCreators'
 import { bindActionCreators } from 'redux'
 
 //---- external css -----------------
@@ -29,12 +29,13 @@ class App extends Component {
     super(props)
     this.state = Object.assign({}, props, { isLogged: false, isAdmin: false, });
     this.initStorage();
+    this.props._isUserLoggedIn();
     this.logOutUser = this.logOutUser.bind(this);
   }
 
   initStorage() {
-    let usersArr = localStorage.getItem('users');
-    if (!usersArr) {
+    let usersArr = JSON.parse(localStorage.getItem('users'));
+    if (!usersArr || usersArr.length === 0) {
       localStorage.setItem('users', JSON.stringify([{
         username: "Steve",
         password: "SecurePass",
@@ -42,8 +43,8 @@ class App extends Component {
         role: "admin"
       }]));
     }
-    let tasksArr = localStorage.getItem('tasks');
-    if (!tasksArr) {
+    let tasksArr = JSON.parse(localStorage.getItem('tasks'));
+    if (!tasksArr || tasksArr.length === 0) {
       localStorage.setItem('tasks', JSON.stringify([{
         owner: "Steve",
         taskTitle: "Important task",
@@ -52,6 +53,11 @@ class App extends Component {
         status: "finished"
       }]));
     }
+    let _currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!_currentUser) {
+      localStorage.setItem('currentUser', JSON.stringify({}));
+    }
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -108,7 +114,8 @@ class App extends Component {
 }
 
 App.propTypes = {
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  _isUserLoggedIn: PropTypes.func.isRequired
 }
 
 
@@ -120,7 +127,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    logout: bindActionCreators(logoutUser, dispatch)
+    logout: bindActionCreators(logoutUser, dispatch),
+    _isUserLoggedIn: bindActionCreators(isUserLoggedIn, dispatch),
   }
 }
 

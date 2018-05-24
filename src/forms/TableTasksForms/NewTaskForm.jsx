@@ -2,64 +2,49 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import { deepOrangeA700 } from 'material-ui/styles/colors';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import { destroyTaskForEditing, applyTaskChanges, deleteTask } from '../../redux/ActionCreators'
+import { closeNewTaskDialog, addNewTask } from '../../redux/ActionCreators'
 import { bindActionCreators } from 'redux'
 
-class TaskEditForm extends React.Component {
+class NewTaskForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = Object.assign({}, props, {
-            taskTitle: props.taskForEditing.taskTitle,
-            taskDescription: props.taskForEditing.taskDescription,
-            taskPriority: props.taskForEditing.taskPriority,
-            status: props.taskForEditing.status
+            taskTitle: "Default title",
+            taskDescription: "Default description",
+            taskPriority: 1,
+            status: "finished"
         });
         this.handleClose = this.handleClose.bind(this);
         this.saveChanges = this.saveChanges.bind(this);
-        this.deleteTask = this.deleteTask.bind(this);
     }
-
 
     handleClose() {
-        this.props._destroyTaskForEditing();
-    };
-
-    saveChanges() {
-        this.props._applyTaskChanges(this.state.taskForEditing, {
-            owner: this.state.taskForEditing.owner,
-            taskTitle: this.state.taskTitle,
-            taskDescription: this.state.taskDescription,
-            taskPriority: this.state.taskPriority,
-            status: this.state.status
-        })
+        this.props._closeNewTaskDialog();
     }
 
-    deleteTask() {
-        this.props._deleteTask({
-            owner: this.state.taskForEditing.owner,
+    saveChanges() {
+        this.props._addNewTask({
+            owner: this.state.currentUser.username,
             taskTitle: this.state.taskTitle,
             taskDescription: this.state.taskDescription,
             taskPriority: this.state.taskPriority,
-            status: this.state.status
+            status: this.state.status,
         });
-        this.props._destroyTaskForEditing();
-
+        this.props._closeNewTaskDialog();
     }
 
     render() {
         const actions = [
             <FlatButton label="Save" primary={true} onClick={this.saveChanges} />,
             <FlatButton label="Close" primary={true} onClick={this.handleClose} />,
-            <FlatButton label="Delete" style={{ color: deepOrangeA700 }} onClick={this.deleteTask} />
         ];
         return (
             <div>
                 <Dialog
-                    title="Edit Task" actions={actions} modal={true} open={this.state.open} >
+                    title="New Task" actions={actions} modal={true} open={this.state.open} >
                     <TextField hintText="Enter new title" floatingLabelText="Title" value={this.state.taskTitle}
                         onChange={(event, newValue) => this.setState({ taskTitle: newValue })} />
                     <TextField hintText="Enter new description" floatingLabelText="Description" value={this.state.taskDescription}
@@ -75,22 +60,24 @@ class TaskEditForm extends React.Component {
     }
 }
 
-TaskEditForm.propTypes = {
-    taskForEditing: PropTypes.object.isRequired,
+NewTaskForm.propTypes = {
+    currentUser: PropTypes.object.isRequired,
+    shouldOpenNewTaskDialog: PropTypes.bool.isRequired,
+    _addNewTask: PropTypes.func.isRequired,
 }
 
 function mapStateToProps(state, ownProps) {
     return {
-        taskForEditing: state.taskForEditing,
+        currentUser: state.currentUser,
+        shouldOpenNewTaskDialog: state.newTaskDialog
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        _destroyTaskForEditing: bindActionCreators(destroyTaskForEditing, dispatch),
-        _applyTaskChanges: bindActionCreators(applyTaskChanges, dispatch),
-        _deleteTask: bindActionCreators(deleteTask, dispatch),
+        _closeNewTaskDialog: bindActionCreators(closeNewTaskDialog, dispatch),
+        _addNewTask: bindActionCreators(addNewTask, dispatch),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TaskEditForm);
+export default connect(mapStateToProps, mapDispatchToProps)(NewTaskForm);

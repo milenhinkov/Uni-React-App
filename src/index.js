@@ -16,22 +16,3 @@ ReactDOM.render(
         </Router>
     </Provider>, document.getElementById('root'));
 registerServiceWorker();
-
-function getStorageData() {
-    debugger;
-    let appData = JSON.parse(localStorage.getItem('appData'));
-    if (!appData) {
-        appData = {
-            users: [
-                {
-                    userName: "Admin",
-                    password: "SecurePass",
-                    role: "admin",
-                }],
-            tasks: [],
-            currentUser: {},
-        }
-        localStorage.setItem('appData', JSON.stringify(appData));
-    }
-    return appData;
-}
